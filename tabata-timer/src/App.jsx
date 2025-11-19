@@ -1,11 +1,9 @@
-import SimpleTimer from './components/SimpleTimer';
+import { BasicTabata } from "./components/BasicTabata"
 
 function App() {
-  return (
-    <div className="App">
-      <SimpleTimer />
-    </div>
-  );
+    return (
+    <BasicTabata />
+  )
 }
 
 export default App;
