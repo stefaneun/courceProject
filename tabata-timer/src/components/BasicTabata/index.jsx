@@ -36,10 +36,6 @@ export const BasicTabata = () => {
         }
     }, [cyclesLeft, phase, timeLeft]);
 
-    const getPhaseColor = () => {
-        return phase === 'work' ? '#ff4444' : '#44ff44';
-    };
-
     const getPhaseText = () => {
         return phase === 'work' ? ' РАБОТА' : ' ОТДЫХ';
     };
