@@ -1,10 +1,25 @@
 import React, { useEffect, useState } from "react";
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useSound } from '../../hooks/useSound';
+// import { formatTime } from '../../utils/tabataUtils';
 
 export const BasicTabata = () => {
+
+    const [program, setProgram] = useLocalStorage('currentProgram', {
+        name: 'Default program',
+        workTime: 20,
+        restTime: 10,
+        cycles: 8,
+        warmup: 0,
+        cooldown: 0
+    });
+
     const [phase, setPhase] = useState('work');
     const [timeLeft, setTimeLeft] = useState(20);
     const [cyclesLeft, setCyclesLeft] = useState(8);
     const [isRunning, setIsRunning] = useState(false);
+
+    const { playStart, playStop, playPhaseChange, playEnd } = useSound();
 
     useEffect(() => {
         if (!isRunning) return;
@@ -25,25 +40,23 @@ export const BasicTabata = () => {
             });
         }, 1000);
 
-
         return () => clearInterval(interval);
     }, [isRunning, phase, cyclesLeft]);
 
     useEffect(() => {
         if (cyclesLeft <= 0 && phase === 'work' && timeLeft <= 1) {
-            console.log('Тренировка завершена!');
+            console.log('END!');
             setIsRunning(false);
         }
     }, [cyclesLeft, phase, timeLeft]);
 
     const getPhaseText = () => {
-        return phase === 'work' ? ' РАБОТА' : ' ОТДЫХ';
+        return phase === 'work' ? ' WORK' : ' REST';
     };
-
 
     return (
         <>
-            <h1>Tabata Timer</h1>
+            <div>Train Timer</div>
             <div>
                 {getPhaseText()}
             </div>
@@ -51,7 +64,7 @@ export const BasicTabata = () => {
                 {timeLeft}
             </div>
             <div>
-                Циклов осталось: {cyclesLeft}
+                Cycles left: {cyclesLeft}
             </div>
 
             <div>
@@ -59,14 +72,14 @@ export const BasicTabata = () => {
                     onClick={() => setIsRunning(true)}
                     disabled={isRunning}
                 >
-                    Старт
+                    Start
                 </button>
 
                 <button
                     onClick={() => setIsRunning(false)}
                     disabled={!isRunning}
                 >
-                    Пауза
+                    Pause
                 </button>
 
                 <button
@@ -77,7 +90,7 @@ export const BasicTabata = () => {
                         setCyclesLeft(8);
                     }}
                 >
-                    Сброс
+                    Reset
                 </button>
 
             </div>
