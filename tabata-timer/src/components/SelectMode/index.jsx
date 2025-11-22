@@ -1,4 +1,5 @@
 import React from 'react';
+import './styles.css'
 
 export const SelectMode = ({ 
     savedPrograms, 
@@ -9,8 +10,8 @@ export const SelectMode = ({
     onBackToTimer 
 }) => {
     return (
-        <div className="select-mode">
-            <h2>Select Program</h2>
+        <div className="container">
+            <h1>Select Program</h1>
 
             <div className="programs-list">
                 {savedPrograms.map(program => (

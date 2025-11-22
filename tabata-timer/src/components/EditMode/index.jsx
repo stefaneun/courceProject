@@ -1,4 +1,5 @@
 import React from 'react';
+import './styles.css'
 
 export const EditMode = ({ 
     editProgram, 
@@ -7,8 +8,8 @@ export const EditMode = ({
     onCancelEdit 
 }) => {
     return (
-        <div className="edit-mode">
-            <h2>{editProgram.id ? 'Edit Program' : 'Create New Program'}</h2>
+        <div className="container">
+            <h1>{editProgram.id ? 'Edit Program' : 'Create New Program'}</h1>
 
             <div className="edit-form">
                 <div className="form-group">

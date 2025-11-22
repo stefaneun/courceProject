@@ -1,0 +1,43 @@
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.tabata-container {
+    max-width: 1280px;
+    width: 100%;
+    margin: 25px auto 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-radius: 18px;
+    background: #e4e4e4;
+    padding: 20px 25px;
+}
+
+
+* {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+}
