@@ -8,7 +8,6 @@ import { EditMode } from '../EditMode';
 
 import { Modal } from '../ui/Modal';
 import './styles.css';
-
 export const BasicTabata = () => {
     const defaultProgramList = defaultPrograms.defaultPrograms || [];
 
@@ -24,6 +23,19 @@ export const BasicTabata = () => {
     const [modal, setModal] = useState({ isOpen: false, title: '', message: '' });
 
     const { playStart, playStop, playPhaseChange, playEnd } = useSound();
+
+    const handleReset = () => {
+        setIsRunning(false);
+        setPhase('ready');
+        setTimeLeft(currentProgram.workTime);
+        setCyclesLeft(currentProgram.cycles);
+        playStop();
+    };
+
+
+    useEffect(() => {
+        handleReset();
+    }, [currentProgram]);
 
     const showModal = (title, message) => {
         setModal({
@@ -49,14 +61,6 @@ export const BasicTabata = () => {
         playStop();
     };
 
-    const handleReset = () => {
-        setIsRunning(false);
-        setPhase('ready');
-        setTimeLeft(currentProgram.workTime);
-        setCyclesLeft(currentProgram.cycles);
-        playStop();
-    };
-
     const handleFinish = () => {
         setIsRunning(false);
         setPhase('finished');
@@ -77,7 +81,6 @@ export const BasicTabata = () => {
     const handleSelectProgram = (program) => {
         setCurrentProgram(program);
         setMode('timer');
-        handleReset();
     };
 
     const handleCreateNew = () => {
@@ -105,7 +108,6 @@ export const BasicTabata = () => {
         setSavedPrograms(updatedPrograms);
         setCurrentProgram(editProgram);
         setMode('timer');
-        handleReset();
 
         showModal('Success', 'Program saved successfully!');
     };
@@ -116,16 +118,16 @@ export const BasicTabata = () => {
             return;
         }
 
+        const programToDelete = savedPrograms.find(p => p.id === programId);
         showModal(
             'Confirm Delete',
-            'Are you sure you want to delete this program?',
+            `Are you sure you want to delete "${programToDelete.name}"?`,
             () => {
                 const updatedPrograms = savedPrograms.filter(p => p.id !== programId);
                 setSavedPrograms(updatedPrograms);
 
                 if (currentProgram.id === programId) {
                     setCurrentProgram(updatedPrograms[0]);
-                    handleReset();
                 }
                 closeModal();
             }
