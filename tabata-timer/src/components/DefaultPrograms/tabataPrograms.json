@@ -1,0 +1,31 @@
+{
+  "defaultPrograms": [
+    {
+      "id": 1,
+      "name": "Basic Tabata",
+      "workTime": 20,
+      "restTime": 10,
+      "cycles": 8,
+      "warmup": 0,
+      "cooldown": 0
+    },
+    {
+      "id": 2,
+      "name": "Advanced Tabata",
+      "workTime": 30,
+      "restTime": 15,
+      "cycles": 6,
+      "warmup": 60,
+      "cooldown": 60
+    },
+    {
+      "id": 3,
+      "name": "Quick Workout",
+      "workTime": 15,
+      "restTime": 5,
+      "cycles": 10,
+      "warmup": 30,
+      "cooldown": 30
+    }
+  ]
+}
