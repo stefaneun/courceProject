@@ -1,0 +1,29 @@
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+    font-size: 20px;
+}
+
+.form-group input {
+    font-weight: 400;
+    font-size: 16px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid;
+    padding: 10px 15px;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding: 10px;
+}

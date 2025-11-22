@@ -1,4 +1,5 @@
 import React from 'react';
+import './styles.css'
 
 export const TimerMode = ({ 
     currentProgram, 
@@ -16,11 +17,11 @@ export const TimerMode = ({
     };
 
     return (
-        <div className="timer-mode">
+        <div className="container">
             <h1>Tabata Timer</h1>
-            <div className="current-program">Current Program: {currentProgram.name}</div>
+            <div className="current-program">Current Program: <span>{currentProgram.name}</span></div>
 
-            <div className={`phase-display ${phase}`}>Phase: {phase.toUpperCase()}</div>
+            <div className={`phase-display ${phase}`}>Phase: <span>{phase.toUpperCase()}</span></div>
 
             <div className="time-display">{formatTime(timeLeft)}</div>
 
