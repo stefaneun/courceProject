@@ -13,14 +13,19 @@ export const BasicTabata = () => {
 
     const [savedPrograms, setSavedPrograms] = useLocalStorage('tabataPrograms', defaultProgramList);
     const [currentProgram, setCurrentProgram] = useLocalStorage('currentProgram', savedPrograms[0] || defaultProgramList[0]);
-
+    
     const [phase, setPhase] = useState('ready');
     const [timeLeft, setTimeLeft] = useState(currentProgram.workTime);
     const [cyclesLeft, setCyclesLeft] = useState(currentProgram.cycles);
     const [isRunning, setIsRunning] = useState(false);
     const [editProgram, setEditProgram] = useState({ ...currentProgram });
     const [mode, setMode] = useState('timer');
-    const [modal, setModal] = useState({ isOpen: false, title: '', message: '' });
+    const [modal, setModal] = useState({ 
+        isOpen: false, 
+        title: '', 
+        message: '',
+        onConfirm: null 
+    });
 
     const { playStart, playStop, playPhaseChange, playEnd } = useSound();
 
@@ -32,21 +37,29 @@ export const BasicTabata = () => {
         playStop();
     };
 
-
     useEffect(() => {
-        handleReset();
+        setIsRunning(false);
+        setPhase('ready');
+        setTimeLeft(currentProgram.workTime);
+        setCyclesLeft(currentProgram.cycles);
     }, [currentProgram]);
 
-    const showModal = (title, message) => {
+    const showModal = (title, message, onConfirm = null) => {
         setModal({
             isOpen: true,
             title,
-            message
+            message,
+            onConfirm
         });
     };
 
     const closeModal = () => {
-        setModal({ isOpen: false, title: '', message: '' });
+        setModal({ 
+            isOpen: false, 
+            title: '', 
+            message: '',
+            onConfirm: null 
+        });
     };
 
     const handleStart = () => {
@@ -108,7 +121,6 @@ export const BasicTabata = () => {
         setSavedPrograms(updatedPrograms);
         setCurrentProgram(editProgram);
         setMode('timer');
-
         showModal('Success', 'Program saved successfully!');
     };
 
@@ -120,7 +132,7 @@ export const BasicTabata = () => {
 
         const programToDelete = savedPrograms.find(p => p.id === programId);
         showModal(
-            'Confirm Delete',
+            'Confirm Delete', 
             `Are you sure you want to delete "${programToDelete.name}"?`,
             () => {
                 const updatedPrograms = savedPrograms.filter(p => p.id !== programId);
@@ -216,18 +228,21 @@ export const BasicTabata = () => {
     return (
         <div className="tabata-container">
             {renderMode()}
-
-            <Modal
-                isOpen={modal.isOpen}
+            
+            <Modal 
+                isOpen={modal.isOpen} 
                 onClose={closeModal}
                 title={modal.title}
+                onConfirm={modal.onConfirm}
             >
                 <p>{modal.message}</p>
-                <div className="modal-actions">
-                    <button onClick={closeModal} className="btn btn-primary">
-                        OK
-                    </button>
-                </div>
+                {!modal.onConfirm && (
+                    <div className="modal-actions">
+                        <button onClick={closeModal} className="btn btn-primary">
+                            OK
+                        </button>
+                    </div>
+                )}
             </Modal>
         </div>
     );
