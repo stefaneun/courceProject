@@ -6,22 +6,37 @@ import { TimerMode } from '../TimerMode';
 import { SelectMode } from '../SelectMode';
 import { EditMode } from '../EditMode';
 
+import { Modal } from '../ui/Modal';
+import './styles.css';
+
 export const BasicTabata = () => {
     const defaultProgramList = defaultPrograms.defaultPrograms || [];
 
     const [savedPrograms, setSavedPrograms] = useLocalStorage('tabataPrograms', defaultProgramList);
     const [currentProgram, setCurrentProgram] = useLocalStorage('currentProgram', savedPrograms[0] || defaultProgramList[0]);
-    
+
     const [phase, setPhase] = useState('ready');
     const [timeLeft, setTimeLeft] = useState(currentProgram.workTime);
     const [cyclesLeft, setCyclesLeft] = useState(currentProgram.cycles);
     const [isRunning, setIsRunning] = useState(false);
     const [editProgram, setEditProgram] = useState({ ...currentProgram });
     const [mode, setMode] = useState('timer');
+    const [modal, setModal] = useState({ isOpen: false, title: '', message: '' });
 
     const { playStart, playStop, playPhaseChange, playEnd } = useSound();
 
-    
+    const showModal = (title, message) => {
+        setModal({
+            isOpen: true,
+            title,
+            message
+        });
+    };
+
+    const closeModal = () => {
+        setModal({ isOpen: false, title: '', message: '' });
+    };
+
     const handleStart = () => {
         setIsRunning(true);
         setPhase('work');
@@ -59,7 +74,6 @@ export const BasicTabata = () => {
         }
     };
 
-    
     const handleSelectProgram = (program) => {
         setCurrentProgram(program);
         setMode('timer');
@@ -92,21 +106,30 @@ export const BasicTabata = () => {
         setCurrentProgram(editProgram);
         setMode('timer');
         handleReset();
+
+        showModal('Success', 'Program saved successfully!');
     };
 
     const handleDeleteProgram = (programId) => {
         if (savedPrograms.length <= 1) {
-            alert('Cannot delete the last program');
+            showModal('Cannot Delete', 'You cannot delete the last program. Please create a new program first.');
             return;
         }
 
-        const updatedPrograms = savedPrograms.filter(p => p.id !== programId);
-        setSavedPrograms(updatedPrograms);
+        showModal(
+            'Confirm Delete',
+            'Are you sure you want to delete this program?',
+            () => {
+                const updatedPrograms = savedPrograms.filter(p => p.id !== programId);
+                setSavedPrograms(updatedPrograms);
 
-        if (currentProgram.id === programId) {
-            setCurrentProgram(updatedPrograms[0]);
-            handleReset();
-        }
+                if (currentProgram.id === programId) {
+                    setCurrentProgram(updatedPrograms[0]);
+                    handleReset();
+                }
+                closeModal();
+            }
+        );
     };
 
     const handleCancelEdit = () => {
@@ -191,6 +214,19 @@ export const BasicTabata = () => {
     return (
         <div className="tabata-container">
             {renderMode()}
+
+            <Modal
+                isOpen={modal.isOpen}
+                onClose={closeModal}
+                title={modal.title}
+            >
+                <p>{modal.message}</p>
+                <div className="modal-actions">
+                    <button onClick={closeModal} className="btn btn-primary">
+                        OK
+                    </button>
+                </div>
+            </Modal>
         </div>
     );
 };
