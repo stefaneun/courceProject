@@ -8,7 +8,6 @@ import { EditMode } from '../EditMode';
 
 import { Modal } from '../ui/Modal';
 import './styles.css';
-
 export const BasicTabata = () => {
     const defaultProgramList = defaultPrograms.defaultPrograms || [];
 
