@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useSound } from '../../hooks/useSound';
-import defaultPrograms from '../DefaultPrograms/tabataPrograms.json'
+import defaultPrograms from '../DefaultPrograms/tabataPrograms.json';
+import { TimerMode } from '../TimerMode';
+import { SelectMode } from '../SelectMode';
+import { EditMode } from '../EditMode';
 
 export const BasicTabata = () => {
-
     const defaultProgramList = defaultPrograms.defaultPrograms || [];
 
     const [savedPrograms, setSavedPrograms] = useLocalStorage('tabataPrograms', defaultProgramList);
     const [currentProgram, setCurrentProgram] = useLocalStorage('currentProgram', savedPrograms[0] || defaultProgramList[0]);
-
+    
     const [phase, setPhase] = useState('ready');
     const [timeLeft, setTimeLeft] = useState(currentProgram.workTime);
     const [cyclesLeft, setCyclesLeft] = useState(currentProgram.cycles);
@@ -19,6 +21,7 @@ export const BasicTabata = () => {
 
     const { playStart, playStop, playPhaseChange, playEnd } = useSound();
 
+    
     const handleStart = () => {
         setIsRunning(true);
         setPhase('work');
@@ -56,6 +59,7 @@ export const BasicTabata = () => {
         }
     };
 
+    
     const handleSelectProgram = (program) => {
         setCurrentProgram(program);
         setMode('timer');
@@ -144,154 +148,49 @@ export const BasicTabata = () => {
         return () => clearInterval(interval);
     }, [isRunning, phase, cyclesLeft, currentProgram]);
 
-    const formatTime = (seconds) => {
-        return `${seconds}`.padStart(2, '0');
+    const renderMode = () => {
+        switch (mode) {
+            case 'select':
+                return (
+                    <SelectMode
+                        savedPrograms={savedPrograms}
+                        onSelectProgram={handleSelectProgram}
+                        onEditProgram={handleEditProgram}
+                        onDeleteProgram={handleDeleteProgram}
+                        onCreateNew={handleCreateNew}
+                        onBackToTimer={() => setMode('timer')}
+                    />
+                );
+            case 'edit':
+                return (
+                    <EditMode
+                        editProgram={editProgram}
+                        onInputChange={handleInputChange}
+                        onSaveProgram={handleSaveProgram}
+                        onCancelEdit={handleCancelEdit}
+                    />
+                );
+            case 'timer':
+            default:
+                return (
+                    <TimerMode
+                        currentProgram={currentProgram}
+                        phase={phase}
+                        timeLeft={timeLeft}
+                        cyclesLeft={cyclesLeft}
+                        isRunning={isRunning}
+                        onStart={handleStart}
+                        onPause={handlePause}
+                        onReset={handleReset}
+                        onSelectProgram={() => setMode('select')}
+                    />
+                );
+        }
     };
 
-    if (mode === 'select') {
-        return (
-            <div>
-                <h2>Select Program</h2>
-
-                {savedPrograms.map(program => (
-                    <div key={program.id} style={{ border: '1px solid #ccc', padding: '10px', margin: '5px' }}>
-                        <h3>{program.name}</h3>
-                        <div>Work: {program.workTime}s | Rest: {program.restTime}s</div>
-                        <div>Cycles: {program.cycles} | Warmup: {program.warmup}s | Cooldown: {program.cooldown}s</div>
-                        <div>
-                            <button onClick={() => handleSelectProgram(program)}>Select</button>
-                            <button onClick={() => handleEditProgram(program)}>Edit</button>
-                            <button onClick={() => handleDeleteProgram(program.id)}>Delete</button>
-                        </div>
-                    </div>
-                ))}
-
-                <div>
-                    <button onClick={handleCreateNew}>Create New Program</button>
-                    <button onClick={() => setMode('timer')}>Back to Timer</button>
-                </div>
-            </div>
-        );
-    }
-
-    if (mode === 'edit') {
-        return (
-            <div>
-                <h2>{editProgram.id ? 'Edit Program' : 'Create New Program'}</h2>
-
-                <div>
-                    <label>Program Name: </label>
-                    <input
-                        type="text"
-                        value={editProgram.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                    />
-                </div>
-
-                <div>
-                    <label>Work Time (seconds): </label>
-                    <input
-                        type="number"
-                        value={editProgram.workTime}
-                        onChange={(e) => handleInputChange('workTime', e.target.value)}
-                        min="1"
-                    />
-                </div>
-
-                <div>
-                    <label>Rest Time (seconds): </label>
-                    <input
-                        type="number"
-                        value={editProgram.restTime}
-                        onChange={(e) => handleInputChange('restTime', e.target.value)}
-                        min="1"
-                    />
-                </div>
-
-                <div>
-                    <label>Cycles: </label>
-                    <input
-                        type="number"
-                        value={editProgram.cycles}
-                        onChange={(e) => handleInputChange('cycles', e.target.value)}
-                        min="1"
-                    />
-                </div>
-
-                <div>
-                    <label>Warmup (seconds): </label>
-                    <input
-                        type="number"
-                        value={editProgram.warmup}
-                        onChange={(e) => handleInputChange('warmup', e.target.value)}
-                        min="0"
-                    />
-                </div>
-
-                <div>
-                    <label>Cooldown (seconds): </label>
-                    <input
-                        type="number"
-                        value={editProgram.cooldown}
-                        onChange={(e) => handleInputChange('cooldown', e.target.value)}
-                        min="0"
-                    />
-                </div>
-
-                <div>
-                    <button onClick={handleSaveProgram}>Save Program</button>
-                    <button onClick={handleCancelEdit}>Cancel</button>
-                </div>
-            </div>
-        );
-    }
-
-
     return (
-        <div>
-            <h1>Tabata Timer</h1>
-            <div>Current Program: {currentProgram.name}</div>
-
-            <div>Phase: {phase.toUpperCase()}</div>
-
-            <div>Time: {formatTime(timeLeft)}</div>
-
-            <div>Cycles: {cyclesLeft} / {currentProgram.cycles}</div>
-
-            <div>
-                <button
-                    onClick={handleStart}
-                    disabled={isRunning || phase === 'finished'}
-                >
-                    Start
-                </button>
-
-                <button
-                    onClick={handlePause}
-                    disabled={!isRunning}
-                >
-                    Pause
-                </button>
-
-                <button onClick={handleReset}>
-                    Reset
-                </button>
-
-                <button
-                    onClick={() => setMode('select')}
-                    disabled={isRunning}
-                >
-                    Select Program
-                </button>
-            </div>
-
-            <div>
-                <div>Work: {currentProgram.workTime}s</div>
-                <div>Rest: {currentProgram.restTime}s</div>
-                <div>Cycles: {currentProgram.cycles}</div>
-                <div>Warmup: {currentProgram.warmup}s</div>
-                <div>Cooldown: {currentProgram.cooldown}s</div>
-            </div>
+        <div className="tabata-container">
+            {renderMode()}
         </div>
     );
 };
