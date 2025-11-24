@@ -253,10 +253,22 @@ export const BasicTabata = () => {
             >
                 <p>{modal.message}</p>
                 <div className="modal-actions">
-                   
-                        <button onClick={modal.onConfirm} className="btn btn-primary">
+                    {modal.onConfirm ? (
+                        
+                        <>
+                            <button onClick={closeModal} className="btn btn-secondary">
+                                Cancel
+                            </button>
+                            <button onClick={modal.onConfirm} className="btn btn-danger">
+                                Delete
+                            </button>
+                        </>
+                    ) : (
+                       
+                        <button onClick={closeModal} className="btn btn-primary">
                             OK
                         </button>
+                    )}
                 </div>
             </Modal>
         </div>
