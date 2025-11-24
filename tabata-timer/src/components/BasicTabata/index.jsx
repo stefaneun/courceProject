@@ -13,18 +13,18 @@ export const BasicTabata = () => {
 
     const [savedPrograms, setSavedPrograms] = useLocalStorage('tabataPrograms', defaultProgramList);
     const [currentProgram, setCurrentProgram] = useLocalStorage('currentProgram', savedPrograms[0] || defaultProgramList[0]);
-    
+
     const [phase, setPhase] = useState('ready');
     const [timeLeft, setTimeLeft] = useState(currentProgram.workTime);
     const [cyclesLeft, setCyclesLeft] = useState(currentProgram.cycles);
     const [isRunning, setIsRunning] = useState(false);
     const [editProgram, setEditProgram] = useState({ ...currentProgram });
     const [mode, setMode] = useState('timer');
-    const [modal, setModal] = useState({ 
-        isOpen: false, 
-        title: '', 
+    const [modal, setModal] = useState({
+        isOpen: false,
+        title: '',
         message: '',
-        onConfirm: null 
+        onConfirm: null
     });
 
     const { playStart, playStop, playPhaseChange, playEnd } = useSound();
@@ -54,18 +54,23 @@ export const BasicTabata = () => {
     };
 
     const closeModal = () => {
-        setModal({ 
-            isOpen: false, 
-            title: '', 
+        setModal({
+            isOpen: false,
+            title: '',
             message: '',
-            onConfirm: null 
+            onConfirm: null
         });
     };
 
     const handleStart = () => {
         setIsRunning(true);
-        setPhase('work');
-        setTimeLeft(currentProgram.workTime);
+        if (currentProgram.warmup > 0) {
+            setPhase('warmup');
+            setTimeLeft(currentProgram.warmup);
+        } else {
+            setPhase('work');
+            setTimeLeft(currentProgram.workTime);
+        }
         playStart();
     };
 
@@ -132,7 +137,7 @@ export const BasicTabata = () => {
 
         const programToDelete = savedPrograms.find(p => p.id === programId);
         showModal(
-            'Confirm Delete', 
+            'Confirm Delete',
             `Are you sure you want to delete "${programToDelete.name}"?`,
             () => {
                 const updatedPrograms = savedPrograms.filter(p => p.id !== programId);
@@ -163,18 +168,30 @@ export const BasicTabata = () => {
         const interval = setInterval(() => {
             setTimeLeft(prev => {
                 if (prev <= 1) {
-                    if (phase === 'work') {
+                    if (phase === 'warmup') {
+                        setPhase('work');
+                        setTimeLeft(currentProgram.workTime);
+                        playPhaseChange();
+                    } else if (phase === 'work') {
                         handlePhaseChange('rest');
                     } else if (phase === 'rest') {
                         const newCycles = cyclesLeft - 1;
                         setCyclesLeft(newCycles);
 
                         if (newCycles <= 0) {
-                            handleFinish();
-                            return 0;
+                            if (currentProgram.cooldown > 0) {
+                                setPhase('cooldown');
+                                setTimeLeft(currentProgram.cooldown);
+                                playPhaseChange();
+                            } else {
+                                handleFinish();
+                            }
                         } else {
                             handlePhaseChange('work');
                         }
+                    } else if (phase === 'cooldown') {
+
+                        handleFinish();
                     }
                     return 0;
                 }
@@ -228,21 +245,19 @@ export const BasicTabata = () => {
     return (
         <div className="tabata-container">
             {renderMode()}
-            
-            <Modal 
-                isOpen={modal.isOpen} 
+
+            <Modal
+                isOpen={modal.isOpen}
                 onClose={closeModal}
                 title={modal.title}
-                onConfirm={modal.onConfirm}
             >
                 <p>{modal.message}</p>
-                {!modal.onConfirm && (
-                    <div className="modal-actions">
-                        <button onClick={closeModal} className="btn btn-primary">
+                <div className="modal-actions">
+                   
+                        <button onClick={modal.onConfirm} className="btn btn-primary">
                             OK
                         </button>
-                    </div>
-                )}
+                </div>
             </Modal>
         </div>
     );
