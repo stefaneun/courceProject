@@ -191,7 +191,7 @@ export const BasicTabata = () => {
                             handlePhaseChange('work');
                         }
                     } else if (phase === 'cooldown') {
-                        
+
                         handleFinish();
                     }
                     return 0;
@@ -251,16 +251,14 @@ export const BasicTabata = () => {
                 isOpen={modal.isOpen}
                 onClose={closeModal}
                 title={modal.title}
-                onConfirm={modal.onConfirm}
             >
                 <p>{modal.message}</p>
-                {!modal.onConfirm && (
-                    <div className="modal-actions">
-                        <button onClick={closeModal} className="btn btn-primary">
+                <div className="modal-actions">
+                   
+                        <button onClick={modal.onConfirm} className="btn btn-primary">
                             OK
                         </button>
-                    </div>
-                )}
+                </div>
             </Modal>
         </div>
     );
