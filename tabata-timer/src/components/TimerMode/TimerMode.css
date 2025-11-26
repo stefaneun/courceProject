@@ -1,0 +1,118 @@
+.timer-mode {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    padding: 30px;
+    width: 100%;
+    border: 1px solid #e9ecef;
+}
+
+.timer-mode-title {
+    font-size: 1.75rem;
+    color: #212529;
+    margin: 0 0 20px 0;
+    text-align: center;
+    font-weight: 600;
+}
+
+.timer-mode-current-program {
+    font-size: 1rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.timer-mode-current-program span {
+    font-weight: 600;
+    color: #212529;
+}
+
+.timer-mode-phase-display {
+    font-size: 1.1rem;
+    text-align: center;
+    font-weight: 500;
+    color: #212529;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.timer-mode-phase-description {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.timer-mode-time-display {
+    font-size: 3.5rem;
+    text-align: center;
+    padding: 30px;
+    font-weight: 300;
+    color: #212529;
+    letter-spacing: 2px;
+}
+
+.timer-mode-time-display-ready {
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 30px;
+    font-weight: 600;
+    color: #6c757d;
+    letter-spacing: 1px;
+    font-style: italic;
+}
+
+.timer-mode-cycles-display {
+    font-size: 1rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.timer-mode-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.timer-mode-btn {
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    background-color: white;
+    font-size: 14px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: 500;
+    min-width: 140px;
+    color: #495057;
+}
+
+.timer-mode-btn:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.timer-mode-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.timer-mode-program-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 24px;
+    background: white;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border: 1px solid #e9ecef;
+}
+
+.timer-mode-program-details div {
+    text-align: center;
+    padding: 8px;
+    color: #495057;
+}

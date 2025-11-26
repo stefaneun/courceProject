@@ -1,0 +1,74 @@
+.select-mode {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    padding: 30px;
+    width: 100%;
+    border: 1px solid #e9ecef;
+}
+
+.select-mode-title {
+    font-size: 1.75rem;
+    color: #212529;
+    margin: 0 0 20px 0;
+    text-align: center;
+    font-weight: 600;
+}
+
+.select-mode-programs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.select-mode-program-card {
+    border-radius: 8px;
+    background: white;
+    padding: 20px;
+    border: 1px solid #e9ecef;
+}
+
+.select-mode-program-title {
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: #212529;
+    font-size: 1.1rem;
+}
+
+.select-mode-program-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.select-mode-btn {
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    background-color: white;
+    font-size: 14px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: 500;
+    min-width: 140px;
+    color: #495057;
+}
+
+.select-mode-btn:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.select-mode-program-actions .select-mode-btn {
+    padding: 8px 16px;
+    min-width: auto;
+}
+
+.select-mode-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 20px 0 0 0;
+}

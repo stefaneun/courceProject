@@ -1,5 +1,5 @@
 import React from 'react';
-import './styles.css'
+import './SelectMode.css'
 
 export const SelectMode = ({ 
     savedPrograms, 
@@ -10,33 +10,33 @@ export const SelectMode = ({
     onBackToTimer 
 }) => {
     return (
-        <div className="container">
-            <h1>Select Program</h1>
+        <div className="select-mode">
+            <h1 className="select-mode-title">Select Program</h1>
 
-            <div className="programs-list">
+            <div className="select-mode-programs-list">
                 {savedPrograms.map(program => (
-                    <div key={program.id} className="program-card">
-                        <h3>{program.name}</h3>
-                        <div className="program-details">
+                    <div key={program.id} className="select-mode-program-card">
+                        <h3 className='select-mode-program-title'>{program.name}</h3>
+                        <div className="select-mode-program-details">
                             <div>Work: {program.workTime}s | Rest: {program.restTime}s</div>
                             <div>Cycles: {program.cycles} | Warmup: {program.warmup}s | Cooldown: {program.cooldown}s</div>
                         </div>
-                        <div className="program-actions">
+                        <div className="select-mode-program-actions">
                             <button 
                                 onClick={() => onSelectProgram(program)}
-                                className="btn btn-select"
+                                className="select-mode-btn select-mode-btn-select"
                             >
                                 Select
                             </button>
                             <button 
                                 onClick={() => onEditProgram(program)}
-                                className="btn btn-edit"
+                                className="select-mode-btn select-mode-btn-edit"
                             >
                                 Edit
                             </button>
                             <button 
                                 onClick={() => onDeleteProgram(program.id)}
-                                className="btn btn-delete"
+                                className="select-mode-btn select-mode-btn-delete"
                             >
                                 Delete
                             </button>
@@ -45,11 +45,11 @@ export const SelectMode = ({
                 ))}
             </div>
 
-            <div className="select-actions">
-                <button onClick={onCreateNew} className="btn btn-create">
+            <div className="select-mode-actions">
+                <button onClick={onCreateNew} className="select-mode-btn select-mode-btn-create">
                     Create New Program
                 </button>
-                <button onClick={onBackToTimer} className="btn btn-back">
+                <button onClick={onBackToTimer} className="select-mode-btn select-mode-btn-back">
                     Back to Timer
                 </button>
             </div>

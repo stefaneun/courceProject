@@ -1,63 +1,112 @@
 import React from 'react';
-import './styles.css'
+import './TimerMode.css';
+import { formatTime } from '../utils/tabataUtils';
 
-export const TimerMode = ({ 
-    currentProgram, 
-    phase, 
-    timeLeft, 
-    cyclesLeft, 
-    isRunning, 
-    onStart, 
-    onPause, 
-    onReset, 
-    onSelectProgram 
+export const TimerMode = ({
+    currentProgram,
+    phase,
+    timeLeft,
+    readyTimeDisplay, 
+    cyclesLeft,
+    isRunning,
+    onStart,
+    onPause,
+    onReset,
+    onSelectProgram
 }) => {
-    const formatTime = (seconds) => {
-        return `${seconds}`.padStart(2, '0');
+   
+    const getDisplayTime = () => {
+        if (phase === 'ready') {
+            return readyTimeDisplay;
+        }
+        return timeLeft;
     };
 
+    const getTimeDisplayClass = () => {
+        if (phase === 'ready') {
+            return 'timer-mode-time-display-ready';
+        }
+        return 'timer-mode-time-display';
+    };
+
+    const getPhaseInfo = () => {
+        if (phase === 'ready') {
+            if (currentProgram.warmup > 0) {
+                return {
+                    message: 'Ready to start with warmup',
+                    description: `First: ${currentProgram.warmup}s warmup`
+                };
+            } else {
+                return {
+                    message: 'Ready to start',
+                    description: `First: ${currentProgram.workTime}s work`
+                };
+            }
+        }
+        return {
+            message: `Phase: ${phase.toUpperCase()}`,
+            description: ''
+        };
+    };
+
+    const phaseInfo = getPhaseInfo();
+
     return (
-        <div className="container">
-            <h1>Tabata Timer</h1>
-            <div className="current-program">Current Program: <span>{currentProgram.name}</span></div>
+        <div className="timer-mode">
+            <h1 className='timer-mode-title'>Tabata Timer</h1>
+            
+            <div className="timer-mode-current-program">
+                Current Program: <span>{currentProgram.name}</span>
+            </div>
 
-            <div className={`phase-display ${phase}`}>Phase: <span>{phase.toUpperCase()}</span></div>
+            <div className={`timer-mode-phase-display timer-mode-phase-${phase}`}>
+                {phaseInfo.message}
+                {phaseInfo.description && (
+                    <div className="timer-mode-phase-description">
+                        {phaseInfo.description}
+                    </div>
+                )}
+            </div>
 
-            <div className="time-display">{formatTime(timeLeft)}</div>
+            <div className={getTimeDisplayClass()}>
+                {phase === 'ready' ? 'READY' : formatTime(getDisplayTime())}
+            </div>
 
-            <div className="cycles-display">Cycles: {cyclesLeft} / {currentProgram.cycles}</div>
+            <div className="timer-mode-cycles-display">
+                Cycles: {cyclesLeft} / {currentProgram.cycles}
+            </div>
 
-            <div className="controls">
+            <div className="timer-mode-controls">
                 <button
                     onClick={onStart}
                     disabled={isRunning || phase === 'finished'}
-                    className="btn btn-start"
+                    className="timer-mode-btn timer-mode-btn-start"
                 >
-                    Start
+                    {phase === 'ready' ? 'Start' : 'Resume'}
                 </button>
 
                 <button
                     onClick={onPause}
                     disabled={!isRunning}
-                    className="btn btn-pause"
+                    className="timer-mode-btn timer-mode-btn-pause"
                 >
                     Pause
                 </button>
 
-                <button onClick={onReset} className="btn btn-reset">
+                <button onClick={onReset} className="timer-mode-btn timer-mode-btn-reset">
                     Reset
                 </button>
 
                 <button
                     onClick={onSelectProgram}
                     disabled={isRunning}
-                    className="btn btn-select"
+                    className="timer-mode-btn timer-mode-btn-select"
                 >
                     Select Program
                 </button>
             </div>
 
-            <div className="program-details">
+            <div className="timer-mode-program-details">
                 <div>Work: {currentProgram.workTime}s</div>
                 <div>Rest: {currentProgram.restTime}s</div>
                 <div>Cycles: {currentProgram.cycles}</div>
