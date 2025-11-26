@@ -1,0 +1,71 @@
+.basic-tabata {
+    max-width: 800px;
+    width: 100%;
+    margin: 40px auto 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Inter", sans-serif;
+}
+
+.basic-tabata-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.basic-tabata-btn {
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    background-color: white;
+    font-size: 14px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: 500;
+    min-width: 140px;
+    color: #495057;
+}
+
+.basic-tabata-btn:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.basic-tabata-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.basic-tabata-btn-primary {
+    background-color: #212529;
+    color: white;
+    border: none;
+}
+
+.basic-tabata-btn-primary:hover {
+    background-color: #495057;
+}
+
+.basic-tabata-btn-secondary {
+    background-color: white;
+    color: #495057;
+    border: 1px solid #dee2e6;
+}
+
+.basic-tabata-btn-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.basic-tabata-btn-danger {
+    background-color: white;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+.basic-tabata-btn-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}

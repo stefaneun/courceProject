@@ -5,9 +5,9 @@ import defaultPrograms from '../DefaultPrograms/tabataPrograms.json';
 import { TimerMode } from '../TimerMode';
 import { SelectMode } from '../SelectMode';
 import { EditMode } from '../EditMode';
-
 import { Modal } from '../ui/Modal';
-import './styles.css';
+import './BasicTabata.css';
+
 export const BasicTabata = () => {
     const defaultProgramList = defaultPrograms.defaultPrograms || [];
 
@@ -15,7 +15,7 @@ export const BasicTabata = () => {
     const [currentProgram, setCurrentProgram] = useLocalStorage('currentProgram', savedPrograms[0] || defaultProgramList[0]);
 
     const [phase, setPhase] = useState('ready');
-    const [timeLeft, setTimeLeft] = useState(currentProgram.workTime);
+    const [timeLeft, setTimeLeft] = useState(0); // Всегда 0 в режиме ready
     const [cyclesLeft, setCyclesLeft] = useState(currentProgram.cycles);
     const [isRunning, setIsRunning] = useState(false);
     const [editProgram, setEditProgram] = useState({ ...currentProgram });
@@ -29,10 +29,17 @@ export const BasicTabata = () => {
 
     const { playStart, playStop, playPhaseChange, playEnd } = useSound();
 
+    const getReadyTimeDisplay = () => {
+        if (currentProgram.warmup > 0) {
+            return currentProgram.warmup;
+        }
+        return currentProgram.workTime;
+    };
+
     const handleReset = () => {
         setIsRunning(false);
         setPhase('ready');
-        setTimeLeft(currentProgram.workTime);
+        setTimeLeft(0);
         setCyclesLeft(currentProgram.cycles);
         playStop();
     };
@@ -40,7 +47,7 @@ export const BasicTabata = () => {
     useEffect(() => {
         setIsRunning(false);
         setPhase('ready');
-        setTimeLeft(currentProgram.workTime);
+        setTimeLeft(0);
         setCyclesLeft(currentProgram.cycles);
     }, [currentProgram]);
 
@@ -190,7 +197,6 @@ export const BasicTabata = () => {
                             handlePhaseChange('work');
                         }
                     } else if (phase === 'cooldown') {
-
                         handleFinish();
                     }
                     return 0;
@@ -231,6 +237,7 @@ export const BasicTabata = () => {
                         currentProgram={currentProgram}
                         phase={phase}
                         timeLeft={timeLeft}
+                        readyTimeDisplay={getReadyTimeDisplay()}
                         cyclesLeft={cyclesLeft}
                         isRunning={isRunning}
                         onStart={handleStart}
@@ -243,7 +250,7 @@ export const BasicTabata = () => {
     };
 
     return (
-        <div className="tabata-container">
+        <div className="basic-tabata">
             {renderMode()}
 
             <Modal
@@ -252,20 +259,21 @@ export const BasicTabata = () => {
                 title={modal.title}
             >
                 <p>{modal.message}</p>
-                <div className="modal-actions">
+                <div className="basic-tabata-modal-actions">
                     {modal.onConfirm ? (
-                        
                         <>
-                            <button onClick={closeModal} className="btn btn-secondary">
+                            <button onClick={closeModal} className="basic-tabata-btn basic-tabata-btn-secondary">
                                 Cancel
                             </button>
-                            <button onClick={modal.onConfirm} className="btn btn-danger">
+                            <button onClick={() => {
+                                modal.onConfirm();
+                                closeModal();
+                            }} className="basic-tabata-btn basic-tabata-btn-danger">
                                 Delete
                             </button>
                         </>
                     ) : (
-                       
-                        <button onClick={closeModal} className="btn btn-primary">
+                        <button onClick={closeModal} className="basic-tabata-btn basic-tabata-btn-primary">
                             OK
                         </button>
                     )}
